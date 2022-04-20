@@ -17,7 +17,7 @@ int main(){
 	
 	cin >> source;
 	
-	// Dijkstra's algorithm begins from here
+	
 	priority_queue<pair<int,int>,vector<pair<int,int> >,greater<pair<int,int> > > pq;// min-heap ; In pair => (dist,from)
 	vector<int> distTo(n+1,INT_MAX); 	// 1-indexed array for calculating shortest paths; 
 	
@@ -853,6 +853,139 @@ int main() {
     cout << "\nMachine Constant = " << c;
 
 	return 0;
+}
+
+
+
+Fractional Knapsack
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+class item{
+    public:
+    int weight;
+    int value;
+    float ratio;
+};
+
+void mergeSort(item items[], int i, int f){
+
+    //modify merge sort code accordingly
+
+}
+
+int fractionalKnapsack(item items[], int n, int Kweight){
+    for(int i=0; i<n; i++){
+        items[i].ratio= items[i].value/items[i].weight;
+    }
+
+    mergeSort(items, 0, n-1);
+
+    int i=0;
+    float Value;
+
+    for( i=0; i<n; i++){
+        if(items[i].weight+Value<= Kweight){
+            Value+= items[i].weight;
+        }
+        else{
+            break;
+        }
+    }
+
+    Value+= ((Kweight-Value)/items[i+1].weight)*items[i+1].value;
+
+    return Value;
+
+}
+
+int main(){
+    int n;
+    cin>>n;
+
+    item items[n];
+    for(int i=0; i<n; i++){
+        cin>>items[i].weight>>items[i].value;
+    }
+
+    int Kweight;
+    cin>>Kweight;
+
+    int value= fractionalKnapsack(items, n, Kweight);
+
+}
+
+
+Priority queue
+#include <iostream>
+#include <climits>
+#include <chrono>
+#define MAX_SIZE 1000
+
+using namespace std;
+
+struct element {
+    int value;
+    int priority;
+};
+
+element priority_queue[MAX_SIZE];
+
+int size = -1;
+
+void enqueue(int value, int priority) {
+    int j = size+1;
+    for(; j>=0; j--) {
+        if((priority_queue[j].priority < priority) || ((priority_queue[j].priority == priority) && (priority_queue[j].value < value))) {
+            priority_queue[j+1] = priority_queue[j];
+        } else {
+            break;
+        }
+    }
+    priority_queue[j+1].value = value;
+    priority_queue[j+1].priority = priority;
+    size++;
+}
+
+int peek() {
+    if(size > -1) {
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
+void dequeue() {
+    int index = 0;
+    for(int i = index; i <= size; i++) {
+        priority_queue[i] = priority_queue[i+1];
+    }
+    size--;
+}
+
+int main() {
+    auto startTime1 = chrono::high_resolution_clock::now();
+    for(int i=0; i<MAX_SIZE; i++) {
+        enqueue(i, i);
+    }
+    auto endTime1 = chrono::high_resolution_clock::now();
+    double time1 = chrono::duration_cast<chrono::nanoseconds>(endTime1-startTime1).count();
+    time1 = time1/1000000000;
+    cout << "Machine Constant 1: " << time1/MAX_SIZE << endl;
+
+    auto startTime2 = chrono::high_resolution_clock::now();
+    int temp;
+    while(temp != -1) {
+        temp = peek();
+        dequeue();
+    }
+    auto endTime2 = chrono::high_resolution_clock::now();
+    double time2 = chrono::duration_cast<chrono::nanoseconds>(endTime2-startTime2).count();
+    time2 = time2/1000000000;
+    cout << "Machine Constant 2: " << time2/MAX_SIZE << endl;
+    
+    return 0;
 }
 
 
